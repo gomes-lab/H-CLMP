@@ -16,7 +16,7 @@ can be found in the paper.
 
 ### Enviroments
 
-This software relies a number of packages
+This software relies a number of packages:
 
 Pytorch 1.7.1
 
@@ -32,7 +32,7 @@ tqdm 4.42.1
 
 1). Pretrain a WGAN for transfer learning.
 
-Head to the main folder and run:
+Change the current working directory to the main folder and run:
 ```shell script
 python WGAN_for_DOS/train_GAN.py
 ```
@@ -47,7 +47,7 @@ python WGAN_for_DOS/test_GAN.py
 Copy the 'WGAN.py' and the pretrained WGAN model 'generator_MP2020.pt' to the 
 'uvis_dataset_no_redundancy' folder.
 
-Head to the 'uvis_dataset_no_redundancy' folder and run:
+Change the current working directory to the 'uvis_dataset_no_redundancy' folder and run:
 ```shell script
 python process.py
 ```
@@ -76,7 +76,7 @@ model.
  
 3). Example of training and testing the HCLMP model.
 
-Head to the main folder and run:
+Change the current working directory to the main folder and run:
 ```shell script
 python jobs.py
 ```
