@@ -6,7 +6,7 @@ Authors: Shufeng Kong <sup>1</sup>, Dan Guevarra <sup>2</sup>, Carla P. Gomes <s
    California Institure of Technology, Pasadena, CA, USA
    
 
-This is a Pytorch implementation of the HCLMP model proposed in the above paper. 
+This is a Pytorch implementation of the HCLMP model proposed in our paper. 
 
 ### Dataset, trained models, and results 
 
