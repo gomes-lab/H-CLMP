@@ -1,4 +1,3 @@
-import imageio
 import numpy as np
 import torch
 from torch import nn, optim
@@ -203,15 +202,14 @@ class Trainer():
         labels = torch.Tensor(data[:, 31:]).cuda()
         features = torch.Tensor(data[:, 0:31]).cuda()
 
-        #mean = torch.mean(labels, dim=0).cuda()
-        #std = torch.std(labels, dim=0).cuda()
-        #np.save('label_mean.npy', mean.detach().cpu().numpy())
-        #np.save('label_std.npy', std.detach().cpu().numpy())
-        #exit()
+        mean = torch.mean(labels, dim=0).cuda()
+        std = torch.std(labels, dim=0).cuda()
+        np.save('./WGAN_for_DOS/label_mean.npy', mean.detach().cpu().numpy())
+        np.save('./WGAN_for_DOS/label_std.npy', std.detach().cpu().numpy())
 
-        #labels_standard = (labels - mean) / (std + 1e-6)
+        labels_standard = (labels - mean) / (std + 1e-6)
 
-        dataset = TensorDataset(features, labels)
+        dataset = TensorDataset(features, labels_standard)
 
 
         data_loader = DataLoader(dataset, batch_size=128)

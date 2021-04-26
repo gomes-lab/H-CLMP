@@ -1,4 +1,3 @@
-import imageio
 import numpy as np
 import torch
 from torch import nn, optim
@@ -27,6 +26,9 @@ args.label_dim = 161
 args.data_dir = './data/20200828_MP_dos/MP_comp31_dos161.npy'
 args.test_idx = './data/20200828_MP_dos/test_idx.npy'
 
+args.mean_path = './WGAN_for_DOS/label_mean.npy'
+args.std_path = './WGAN_for_DOS/label_std.npy'
+
 args.lr = 1e-4
 args.betas = (.9, .99)
 args.dataset = 'MP2020'
@@ -34,8 +36,8 @@ args.dataset = 'MP2020'
 data = np.load(args.data_dir,allow_pickle=True).astype(np.float32)
 #train_idx = np.load(args.train_idx,allow_pickle=True).astype(int)
 test_idx = np.load(args.test_idx,allow_pickle=True).astype(int)
-#mean = torch.from_numpy(np.load(args.mean_path))
-#std = torch.from_numpy(np.load(args.std_path))
+mean = torch.from_numpy(np.load(args.mean_path))
+std = torch.from_numpy(np.load(args.std_path))
 
 test_feat = torch.from_numpy(data[test_idx,:][:,0:31])
 test_label = torch.from_numpy(data[test_idx,:][:,31:])
@@ -64,22 +66,15 @@ print('testing...')
 gen_data = sample_generator(G, batch_size, test_feat).detach()
 print('done!')
 #gen_data = gen_data*std+mean
-#test_label = (test_label-mean)/std
+test_label = (test_label-mean)/std
 
-
-#print(gen_data.shape, test_label.shape)
-
-gen_data_normalize = (gen_data - test_label_mean) / test_label_std
-test_label_normalize = (test_label - test_label_mean) / test_label_std
-
-MAE = torch.mean(torch.abs(gen_data_normalize-test_label_normalize))
+MAE = torch.mean(torch.abs(gen_data-test_label))
 print('MAE:', MAE.numpy())
 
 # save testing results
-np.save('./WGAN_for_DOS/test_label.npy', test_label_normalize)
-np.save('./WGAN_for_DOS/test_pred.npy', gen_data_normalize)
-np.save('./WGAN_for_DOS/test_label_mean.npy', test_label_mean)
-np.save('./WGAN_for_DOS/test_label_std.npy', test_label_std)
+np.save('./WGAN_for_DOS/test_label.npy', test_label)
+np.save('./WGAN_for_DOS/test_pred.npy', gen_data)
+
 
 
 
