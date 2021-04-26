@@ -83,7 +83,7 @@ python jobs.py
 
 ### Copyright
 
-The graph encoder we adopted takes the element embedding and element fraction as input and produce an latent embedding.
+The graph encoder we adopted takes the element embedding and element fraction as input and produce a latent embedding.
 This piece of codes is modified from Goodall and Lee, Predicting materials properties without crystal structure: 
 deep representation learning from stoichiometry, Nature communication, 2020. Copyright of the graph encoder belongs to the authors. 
 Please see the Github Link: https://github.com/CompRhys/roost for details.
