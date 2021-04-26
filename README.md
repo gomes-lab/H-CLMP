@@ -16,7 +16,7 @@ can be found in the paper.
 
 ### Enviroments
 
-This software relies a number of packages:
+This software relies on a number of packages:
 
 Pytorch 1.7.1
 
