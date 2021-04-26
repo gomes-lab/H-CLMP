@@ -6,7 +6,7 @@ import torch.nn.functional as F
 import torch.nn as nn
 from random import sample
 from copy import copy, deepcopy
-from HCLMP.utils import *
+#from HCLMP.utils import *
 from HCLMP.graph_encoder import DescriptorNetwork
 
 '''
@@ -26,7 +26,7 @@ class HCLMP(nn.Module):
         self.label_dim = label_dim
         self.scale_coeff = 1.0
         self.transfer_type = transfer_type
-        self.keep_prob = 0.1
+        self.keep_prob = 0.0
         self.label_attention = True
         self.device = device
 
@@ -151,7 +151,7 @@ class HCLMP(nn.Module):
 
         if self.transfer_type == 'gen_feat':
             gen_feat = self.gen_feat_map(gen_feat)
-            gen_feat = F.normalize(gen_feat, dim=1)
+            #gen_feat = F.normalize(gen_feat, dim=1)
             feat = torch.cat((feat, gen_feat), dim=1)
 
         fe_output = self.label_forward(label, feat)
@@ -185,8 +185,8 @@ class HCLMP(nn.Module):
             feat_out = self.transformer_encoder(feat_out)
             label_out = label_out.transpose(0, 1) #  [bs, label_dim, emb_size]
             feat_out = feat_out.transpose(0, 1) #  [bs, label_dim, emb_size]
-            label_out = self.out_after_atten(label_out).squeeze() + label_out0
-            feat_out = self.out_after_atten_x(feat_out).squeeze() + feat_out0
+            label_out = self.out_after_atten(label_out).squeeze()*0.5 + label_out0
+            feat_out = self.out_after_atten_x(feat_out).squeeze()*0.5 + feat_out0
 
         fe_output.update(fx_output)
         output = fe_output
@@ -215,7 +215,7 @@ def compute_loss(input_label, output):
     nll_loss = torch.mean(torch.abs((fe_out-input_label)))
     nll_loss_x = torch.mean(torch.abs((fx_out-input_label)))
 
-    total_loss = (nll_loss + nll_loss_x) * 1 + kl_loss * 1.1 + (fe_kl + fx_kl) * 0.1
+    total_loss = (nll_loss + nll_loss_x) * 1 + kl_loss * 0.5 + (fe_kl + fx_kl) * 1
 
     return total_loss, nll_loss, nll_loss_x, kl_loss
 

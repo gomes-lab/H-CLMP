@@ -9,8 +9,7 @@ Contact: sk2299@cornell.edu
 This is an example script to run jobs. Set single_job to be True if you only have one setting or dataset to run.
 In our experiments, we have 69 systems to run, so we set single_job to be False by default. The trained models will be
 saved in the "models" folder by default.
-Note that, for robustness, you should also run for different epoches and do an ensemble. We recommand to run for epoches
-[20, 40, 60, 80, 100]. 
+Note that, for robustness, you should also run for different epoches and do an ensemble. 
 
 For testing, please set train to be False. The testing results will be saved in the "results" folder by defaults. We 
 have provided trained models for our 69 systems. One can run the script to output results.
@@ -24,7 +23,8 @@ data_path = 'data/uvis_dataset_no_redundancy/uvis_dict.chkpt'
 single_job = False
 train = False
 transfer_type = 'gen_feat' # choices ['gen_feat', 'None']
-epochs = 100
+#transfer_type = 'None'
+epochs = 40
 
 if single_job:
     train_path = 'data/uvis_dataset_no_redundancy/idx/random_split/train/rd_idx.npy'
