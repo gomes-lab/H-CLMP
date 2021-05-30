@@ -19,11 +19,11 @@ class Object(object):
     pass
 
 args = Object()
-args.feature_dim = 31
+args.feature_dim = 39
 args.latent_dim = 50
 args.label_dim = 161
 
-args.data_dir = './data/20200828_MP_dos/MP_comp31_dos161.npy'
+args.data_dir = './data/20200828_MP_dos/MP_comp39_dos161.npy'
 args.test_idx = './data/20200828_MP_dos/test_idx.npy'
 
 args.mean_path = './WGAN_for_DOS/label_mean.npy'
@@ -39,8 +39,8 @@ test_idx = np.load(args.test_idx,allow_pickle=True).astype(int)
 mean = torch.from_numpy(np.load(args.mean_path))
 std = torch.from_numpy(np.load(args.std_path))
 
-test_feat = torch.from_numpy(data[test_idx,:][:,0:31])
-test_label = torch.from_numpy(data[test_idx,:][:,31:])
+test_feat = torch.from_numpy(data[test_idx,:][:,0:args.feature_dim])
+test_label = torch.from_numpy(data[test_idx,:][:,args.feature_dim:])
 #print(test_feat.shape, test_label.shape)
 test_label_mean = torch.mean(test_label, dim=0)
 test_label_std = torch.std(test_label, dim=0)
@@ -62,9 +62,9 @@ def sample_generator(G, num_samples, feature):
     generated_data = generated_data_all/num_sam
     return generated_data
 
-print('testing...')
+print('Testing...')
 gen_data = sample_generator(G, batch_size, test_feat).detach()
-print('done!')
+print('Done!')
 #gen_data = gen_data*std+mean
 test_label = (test_label-mean)/std
 

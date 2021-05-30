@@ -15,7 +15,7 @@ Author: Shufeng KONG, Cornell University, USA
 Contact: sk2299@cornell.edu
 '''
 
-kldivloss = torch.nn.KLDivLoss()
+kldivloss = torch.nn.KLDivLoss(reduction='batchmean')
 
 class HCLMP(nn.Module):
     def __init__(self, input_dim, label_dim, transfer_type, gen_feat_dim, elem_emb_len, device):
@@ -27,14 +27,14 @@ class HCLMP(nn.Module):
         self.scale_coeff = 1.0
         self.transfer_type = transfer_type
         self.keep_prob = 0.0
-        self.label_attention = True
+        self.label_correlation = True
         self.device = device
 
         if transfer_type == 'gen_feat':
-            print(f'using transfer type {transfer_type}\n')
+            #print(f'using transfer type {transfer_type}\n')
             self.input_dim = input_dim*2 #+ gen_feat_dim
         else:
-            print(f'using transfer type {transfer_type}\n')
+            #print(f'using transfer type {transfer_type}\n')
             self.input_dim = input_dim
 
         self.fx1 = nn.Linear(self.input_dim, 256)
@@ -161,7 +161,7 @@ class HCLMP(nn.Module):
         feat_emb  = fx_output['feat_emb'] # [bs, emb_size]
         embs = self.fe0.weight  # [emb_size, label_dim]
 
-        if not self.label_attention:
+        if not self.label_correlation:
             label_out = torch.matmul(label_emb, embs)  # [bs, emb_size] * [emb_size, label_dim] = [bs, label_dim]
             feat_out = torch.matmul(feat_emb, embs)  # [bs, label_dim]
         else:
@@ -169,8 +169,8 @@ class HCLMP(nn.Module):
             feat_out0 = torch.matmul(feat_emb, embs)  # [bs, label_dim]
 
             # generate label embedding from label multivariate Gaussian, perform global label correlation learning
-            noise = torch.normal(0, 1, size=(embs.shape[0], label_out0.shape[0], int(label_out0.shape[1]))).to(self.device)
-            B = self.r_sqrt_sigma.T.float().to(self.device)
+            noise = torch.normal(0, 1, size=(embs.shape[0], label_out0.shape[0], int(label_out0.shape[1]))).to(self.device) # [emb_size, bs, label_dim]
+            B = self.r_sqrt_sigma.T.float().to(self.device) # [label_dim, label_dim]
             label_emb = torch.tensordot(noise, B, dims=1) + label_out0
             feat_emb = torch.tensordot(noise, B, dims=1) + feat_out0 #  [emb_size, bs, label_dim]
             label_emb = F.normalize(label_emb, dim=0) #  [emb_size, bs, label_dim]
@@ -215,7 +215,7 @@ def compute_loss(input_label, output):
     nll_loss = torch.mean(torch.abs((fe_out-input_label)))
     nll_loss_x = torch.mean(torch.abs((fx_out-input_label)))
 
-    total_loss = (nll_loss + nll_loss_x) * 1 + kl_loss * 0.5 + (fe_kl + fx_kl) * 1
+    total_loss = (nll_loss + nll_loss_x) * 1 + kl_loss * 0.1 + (fe_kl + fx_kl) * 1
 
     return total_loss, nll_loss, nll_loss_x, kl_loss
 

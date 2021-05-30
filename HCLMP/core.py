@@ -204,9 +204,26 @@ def train(args):
 
 # load and test models, as well as saving results
 def test(args):
-    print(f'\nTesting on sys {args.sys_name} \n')
-    path = args.save_path + 'best_' + args.transfer_type + '.pth.tar'
-    print('checkpoint path:', path)
+    print(f'\nTesting on sys {args.sys_name}... \n')
+    result_path = f"results/{args.sys_name}/"
+    if args.transfer_type == 'gen_feat':
+        label_b, pred_b, mean_b, std_b, mae_b = run_test(args, 'best')
+    else:
+        label_b, pred_b, mean_b, std_b, mae_b = run_test(args, 'best')
+
+    print("\n********** TESTING STATISTIC ***********")
+    print("MAE =%.6f" % (mae_b))
+    print("\n*****************************************")
+
+    np.save(result_path + 'pred_' + args.transfer_type + '.npy', pred_b)
+    np.save(result_path + 'label_' + args.transfer_type + '.npy', label_b)
+    np.save(result_path + 'mean_' + args.transfer_type + '.npy', mean_b)
+    np.save(result_path + 'std_' + args.transfer_type + '.npy', std_b)
+
+
+def run_test(args, mode):
+    path = args.save_path + mode + '_' + args.transfer_type + '.pth.tar'
+    #print('checkpoint path:', path)
     checkpoint = torch.load(path, map_location=args.device)
     args_save = checkpoint['args']
     args.feat_dim = args_save.feat_dim
@@ -274,21 +291,20 @@ def test(args):
     nll_loss_e = torch.mean(torch.abs(pred_e-label))
     nll_loss_x = torch.mean(torch.abs(pred_x-label))
 
-    print("\n********** TESTING STATISTIC ***********")
-    print("epoch =%.1f\t total_loss =%.6f\t new_nll_loss_e =%.6f\t new_nll_loss_x =%.6f\t kl_loss =%.6f\t" %
-          (checkpoint['epoch'], total_loss_smooth, nll_loss_e, nll_loss_x, kl_loss_smooth))
-    print("\n*****************************************")
+    #print("\n********** TESTING STATISTIC ***********")
+    #print("epoch =%.1f\t total_loss =%.6f\t nll_loss_e =%.6f\t nll_loss_x =%.6f\t kl_loss =%.6f\t" %
+    #      (checkpoint['epoch'], total_loss_smooth, nll_loss_e, nll_loss_x, kl_loss_smooth))
+    #print("\n*****************************************")
 
-    result_path = f"results/{args.sys_name}/"
+    #result_path = f"results/{args.sys_name}/"
     label = label.data.cpu().numpy()
     pred = pred_x.data.cpu().numpy()
     mean = MyScaler.mean.data.cpu().numpy()
     std = MyScaler.std.data.cpu().numpy()
 
-    np.save(result_path + 'pred_' + args.transfer_type + '.npy', pred)
-    np.save(result_path + 'label_' + args.transfer_type + '.npy', label)
-    np.save(result_path + 'mean_' + args.transfer_type + '.npy', mean)
-    np.save(result_path + 'std_' + args.transfer_type + '.npy', std)
+    return label, pred, mean, std, nll_loss_x
+
+
 
 
 

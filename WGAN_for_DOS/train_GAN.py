@@ -19,17 +19,17 @@ class Object(object):
     pass
 
 args = Object()
-args.feature_dim = 31
+args.feature_dim = 39
 args.latent_dim = 50
 args.label_dim = 161
-args.data_dir = './data/20200828_MP_dos/MP_comp31_dos161.npy'
+args.data_dir = './data/20200828_MP_dos/MP_comp39_dos161.npy'
 args.train_idx = './data/20200828_MP_dos/train_idx.npy'
 args.lr = 1e-4
 args.betas = (.9, .99)
 args.dataset = 'MP2020'
 
 def train_GAN(args):
-    print('start training gan .... ')
+    print('Start training gan .... ')
     generator = Generator(label_dim=args.label_dim, latent_dim=args.latent_dim, feature_dim=args.feature_dim)
     discriminator = Discriminator(label_dim=args.label_dim, feature_dim=args.feature_dim)
 
@@ -199,13 +199,14 @@ class Trainer():
         train_idx = np.load(args.train_idx)
         data = data[train_idx,:]
         print(data.shape)
-        labels = torch.Tensor(data[:, 31:]).cuda()
-        features = torch.Tensor(data[:, 0:31]).cuda()
+        labels = torch.Tensor(data[:, args.feature_dim:]).cuda()
+        features = torch.Tensor(data[:, 0:args.feature_dim]).cuda()
 
         mean = torch.mean(labels, dim=0).cuda()
         std = torch.std(labels, dim=0).cuda()
-        np.save('./WGAN_for_DOS/label_mean.npy', mean.detach().cpu().numpy())
-        np.save('./WGAN_for_DOS/label_std.npy', std.detach().cpu().numpy())
+        np.save('label_mean.npy', mean.detach().cpu().numpy())
+        np.save('label_std.npy', std.detach().cpu().numpy())
+        #exit()
 
         labels_standard = (labels - mean) / (std + 1e-6)
 

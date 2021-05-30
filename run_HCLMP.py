@@ -78,7 +78,7 @@ def input_parser():
     parser.add_argument(
         "--feat-dim",
         type=int,
-        default = 31,
+        default = 39,
     )
 
     parser.add_argument(
@@ -120,13 +120,13 @@ def input_parser():
     parser.add_argument(
         "--lr",
         type=float,
-        default = 1e-3,
+        default = 5e-4,
     )
 
     parser.add_argument(
         "--decay-times",
         type=int,
-        default = 4,
+        default = 2,
     )
 
     parser.add_argument(
@@ -146,9 +146,11 @@ if __name__ == '__main__':
     torch.manual_seed(RNG_SEED)
     np.random.seed(RNG_SEED)
     #torch.use_deterministic_algorithms(True)
-    torch.backends.cudnn.deterministic = True
+    #torch.backends.cudnn.deterministic = True
 
     args = input_parser()
+
+    print(f'Using transfer type {args.transfer_type}')
 
     assert args.train_path or args.test_path, ('must provide either a train path or test path.')
 
