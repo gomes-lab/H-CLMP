@@ -9,11 +9,9 @@ The hierarchical correlation learning for multi-property prediction (H-CLMP) fra
 
 This is a Pytorch implementation of the HCLMP model. 
 
-### Dataset, trained models, and results 
+### Datasets 
 
-Datasets, trained models, and results can be found in this link https://drive.google.com/drive/folders/1z5ULw7GcilB6L7Rjgkv5tOKL0n3xm0cT?usp=sharing
-
-Please download the data.zip file and place in the main folder and unzip them. A discription of the dataset can be found in https://data.caltech.edu/records/1878.
+The spectral optical absorption dataset and a discription of the dataset can be found in https://data.caltech.edu/records/1878. To run our software, we need addtional DOS dataset from the material project https://materialsproject.org/. Therefore, we provide a colloection of all the necessary datasets to run our software in this link https://drive.google.com/drive/folders/1z5ULw7GcilB6L7Rjgkv5tOKL0n3xm0cT?usp=sharing. Please download the data.zip file and place in the main folder and unzip them.
 
 ### Enviroments
 
