@@ -5,15 +5,15 @@ Authors: Shufeng Kong <sup>1</sup>, Dan Guevarra <sup>2</sup>, Carla P. Gomes <s
 2) Division of Engineering and Applied Science, 
    California Institure of Technology, Pasadena, CA, USA
    
+The hierarchical correlation learning for multi-property prediction (H-CLMP) framework combines a variational autoencoder, trained for multiple target properties, with a feature encoder from the material composition space to the same multi-property embedding space. A GAN-based transfer learning extension is also included, which learns an internal representation of compositions based on a different set of properties, such as one for which more data is available. A dataset is included for spectral optical absorption (the target properties) in 69 3-cation metal oxide composition spaces, as well as computed density of states (DOS) data from the Materials Project (the properties used for transfer learning).
 
-This is a Pytorch implementation of the HCLMP model proposed in the above paper. 
+This is a Pytorch implementation of the HCLMP model. 
 
 ### Dataset, trained models, and results 
 
 Datasets, trained models, and results can be found in this link https://drive.google.com/drive/folders/1z5ULw7GcilB6L7Rjgkv5tOKL0n3xm0cT?usp=sharing
 
-Please download the three zip files and place in the main folder and unzip them. A discription of the datasets
-can be found in the paper.
+Please download the data zip file and place in the main folder and unzip them. A discription of the dataset can be found in https://data.caltech.edu/records/1878.
 
 ### Enviroments
 
